@@ -1,0 +1,83 @@
+Build a full-stack, production-ready website named `discord.cat` with the following specs:
+
+---
+
+**General Purpose:**
+Create a website that allows users to search and filter indexed Discord messages using Elasticsearch (hosted with Cloud ID, username, and password). Users can look up messages by:
+- `content`
+- `author_id` (user ID)
+- `channel_id`
+- `guild_id`
+
+---
+
+**Data Source:**
+Stored in Elasticsearch in indices `chunk1` and `chunk2`. A sample document looks like:
+
+{
+  "message_id": "1324471191884529717",
+  "content": "<@528735193800900629> hi",
+  "author_id": "249857803504713728",
+  "channel_id": "1323779783351337114",
+  "guild_id": "1323779783351337112",
+  "timestamp": "2025-01-02 20:15:39.630000+00:00"
+}
+
+Use Cloud ID, username, and password for Elasticsearch connection.
+
+---
+
+**Frontend:**
+- Framework: React with TypeScript
+- Clean, elegant, minimal design like `cursor.com` and `spy.pet` (prior to shutdown)
+- Inspired color scheme and hover transitions from `cursor.com`’s front page
+- Toggleable dark mode and light mode (default: light) via a button
+- Do NOT use borders or boxes around elements—keep layout airy, sleek, and flat
+- Homepage shows animated stats counters that increment over 5 seconds:
+  - Total messages
+  - Unique users
+  - Unique guilds
+- Query UI:
+  - Search field and filter dropdowns (for content, author ID, channel ID, guild ID)
+  - Results paginate 50 messages per page
+  - Results can be sorted by timestamp ascending or descending
+  - Display message content, timestamp, user avatar + username, and guild ID
+  - Pull user avatar and username from Discord API using Discord Bot Token (provide backend endpoint for this)
+
+---
+
+**Backend:**
+- Framework: FastAPI (Python)
+- Securely connect to Elasticsearch using Cloud ID, username, and password
+- Endpoints:
+  - `/search`: accepts query parameters (content, author_id, channel_id, guild_id, sort, page), returns paginated results
+  - `/stats`: returns total message count, unique user count, and unique guild count
+  - `/user/:id`: fetches avatar URL and username from Discord API using a provided bot token in headers (validate it)
+- Sanitize inputs and rate-limit API usage
+- Efficient pagination and ES queries (use `search_after` or `from/size` depending on performance needs)
+
+---
+
+**Tech Notes:**
+- Host-ready, optimized build
+- Use styled-components or TailwindCSS for styling
+- Show proper loading states and errors
+- Frontend calls backend, which connects to Elasticsearch and Discord API
+- User avatars fetched and cached per session for speed
+- ready to deploy and production ready.
+
+---
+
+**Name and Branding:**
+- Project name: `discord.cat`
+- Simple logo using a sleek cat outline (optional) or cute kitty.
+- Modern, spy.pet-like aesthetic — extremely clean and advanced feel
+- Prioritize readability and performance
+
+---
+
+Build everything needed — backend, frontend, styling, Elasticsearch queries, Discord API calls, pagination logic, animations, and dark mode — in one go. Structure code cleanly in folders. Production-ready quality.
+
+The elasticsearch is a cloud deployment online and im using cloud id, username and password for  authorization. the messages are stored in chunks named chunk1-5.
+
+use the design in the screenshot provided. 
