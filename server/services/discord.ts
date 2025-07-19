@@ -9,7 +9,10 @@ class DiscordService {
       return this.userCache.get(userId)!;
     }
 
-    if (!botToken) {
+    // Use environment variable if no token provided
+    const token = botToken || process.env.DISCORD_BOT_TOKEN;
+    
+    if (!token) {
       // Return fallback user without avatar
       const fallbackUser: DiscordUser = {
         id: userId,
@@ -23,7 +26,7 @@ class DiscordService {
     try {
       const response = await fetch(`https://discord.com/api/v10/users/${userId}`, {
         headers: {
-          Authorization: `Bot ${botToken}`,
+          Authorization: `Bot ${token}`,
         },
       });
 

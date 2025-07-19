@@ -59,8 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/user/:id", async (req, res) => {
     try {
       const userId = req.params.id;
-      const botToken = req.headers.authorization?.replace('Bot ', '') || 
-                      process.env.DISCORD_BOT_TOKEN;
+      const botToken = req.headers.authorization?.replace('Bot ', '');
 
       const user = await discordService.getUser(userId, botToken);
       

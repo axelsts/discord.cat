@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Cat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
 import { AnimatedCounter } from "@/components/animated-counter";
@@ -63,11 +63,9 @@ function HomePage() {
       <header className="flex items-center justify-between px-8 py-6">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <img 
-            src="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=32&h=32&fit=crop&crop=face" 
-            alt="Discord Cat Logo" 
-            className="w-8 h-8 rounded-full object-cover"
-          />
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <Cat className="w-5 h-5 text-white" />
+          </div>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-200">
             discord.cat
           </span>

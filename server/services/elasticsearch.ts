@@ -6,13 +6,19 @@ class ElasticsearchService {
   private indices = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'chunk5', 'chunk6'];
 
   constructor() {
+    if (!process.env.ELASTICSEARCH_CLOUD_ID) {
+      throw new Error('ELASTICSEARCH_CLOUD_ID environment variable is required');
+    }
+    if (!process.env.ELASTICSEARCH_USERNAME) {
+      throw new Error('ELASTICSEARCH_USERNAME environment variable is required');
+    }
+    if (!process.env.ELASTICSEARCH_PASSWORD) {
+      throw new Error('ELASTICSEARCH_PASSWORD environment variable is required');
+    }
+
     const cloudId = process.env.ELASTICSEARCH_CLOUD_ID;
     const username = process.env.ELASTICSEARCH_USERNAME;
     const password = process.env.ELASTICSEARCH_PASSWORD;
-
-    if (!cloudId || !username || !password) {
-      throw new Error('Elasticsearch credentials not configured');
-    }
 
     this.client = new Client({
       cloud: { id: cloudId },
