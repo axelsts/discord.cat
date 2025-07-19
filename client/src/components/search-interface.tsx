@@ -23,6 +23,11 @@ export function SearchInterface({ onSearch, isLoading = false }: SearchInterface
   });
 
   const handleSearch = () => {
+    // Only search if there's actual content to search for
+    if (!filters.content?.trim() && !filters.author_id?.trim() && !filters.channel_id?.trim() && !filters.guild_id?.trim()) {
+      return;
+    }
+    
     // Reset to page 1 when starting new search
     const searchFilters = { ...filters, page: 1 };
     setFilters(searchFilters);
@@ -49,6 +54,7 @@ export function SearchInterface({ onSearch, isLoading = false }: SearchInterface
             onKeyPress={handleKeyPress}
             className="flex-1 bg-transparent border-0 text-lg placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
             disabled={isLoading}
+            autoComplete="off"
           />
         </div>
         

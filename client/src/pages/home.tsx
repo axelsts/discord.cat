@@ -44,6 +44,11 @@ function HomePage() {
   });
 
   const handleSearch = (filters: SearchFilters) => {
+    // Only search if there's actual content to search for
+    if (!filters.content?.trim() && !filters.author_id?.trim() && !filters.channel_id?.trim() && !filters.guild_id?.trim()) {
+      setHasSearched(false);
+      return;
+    }
     setSearchFilters(filters);
     setHasSearched(true);
   };

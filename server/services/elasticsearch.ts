@@ -123,13 +123,41 @@ class ElasticsearchService {
         },
       };
 
-      // Add content filter if provided
+      // Add content filter if provided - improved search
       if (filters.content) {
         query.bool.must.push({
-          multi_match: {
-            query: filters.content,
-            fields: ['content'],
-            type: 'phrase_prefix',
+          bool: {
+            should: [
+              // Exact phrase match (highest priority)
+              {
+                match_phrase: {
+                  content: {
+                    query: filters.content,
+                    boost: 3,
+                  },
+                },
+              },
+              // Phrase prefix match
+              {
+                match_phrase_prefix: {
+                  content: {
+                    query: filters.content,
+                    boost: 2,
+                  },
+                },
+              },
+              // Fuzzy match for typos
+              {
+                match: {
+                  content: {
+                    query: filters.content,
+                    fuzziness: 'AUTO',
+                    boost: 1,
+                  },
+                },
+              },
+            ],
+            minimum_should_match: 1,
           },
         });
       }

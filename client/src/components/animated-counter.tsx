@@ -7,7 +7,7 @@ interface AnimatedCounterProps {
   className?: string;
 }
 
-export function AnimatedCounter({ value, duration = 2, className = "" }: AnimatedCounterProps) {
+export function AnimatedCounter({ value, duration = 5, className = "" }: AnimatedCounterProps) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => Math.round(latest));
   const [displayValue, setDisplayValue] = useState(0);
