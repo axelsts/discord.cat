@@ -58,9 +58,26 @@ function HomePage() {
       <header className="flex items-center justify-between px-8 py-6">
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 text-gray-800 dark:text-gray-200">
+          <div className="w-8 h-8 text-blue-600 dark:text-blue-400">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-              <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.17C15.24 5.06 14.32 5 13.39 5C11.1 5 8.8 5.18 6.53 5.52L5.8 4.8L4.39 6.21L6 7.81V9C6 10.1 6.9 11 8 11V19C8 20.1 8.9 21 10 21H14C15.1 21 16 20.1 16 19V11C17.1 11 18 10.1 18 9Z"/>
+              {/* Cat head */}
+              <path d="M12 3C16 3 19 6.5 19 10.5C19 14.5 16 18 12 18C8 18 5 14.5 5 10.5C5 6.5 8 3 12 3Z"/>
+              {/* Left ear */}
+              <path d="M8 3L10 7L6 8Z"/>
+              {/* Right ear */}
+              <path d="M16 3L18 8L14 7Z"/>
+              {/* Eyes */}
+              <circle cx="9.5" cy="9" r="1.5" fill="white"/>
+              <circle cx="14.5" cy="9" r="1.5" fill="white"/>
+              <circle cx="9.5" cy="9" r="0.8" fill="currentColor"/>
+              <circle cx="14.5" cy="9" r="0.8" fill="currentColor"/>
+              {/* Nose */}
+              <path d="M11 11.5L12 10.5L13 11.5Z" fill="white"/>
+              {/* Mouth */}
+              <path d="M10 13C10.5 14 11.2 14.5 12 14.5C12.8 14.5 13.5 14 14 13" stroke="white" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+              {/* Whiskers */}
+              <path d="M6 10L8.5 9.5M6 11L8.5 10.5M6 12L8.5 11.5" stroke="white" strokeWidth="0.6" strokeLinecap="round"/>
+              <path d="M18 10L15.5 9.5M18 11L15.5 10.5M18 12L15.5 11.5" stroke="white" strokeWidth="0.6" strokeLinecap="round"/>
             </svg>
           </div>
           <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">
