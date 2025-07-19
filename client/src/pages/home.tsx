@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Moon, Sun, Cat } from "lucide-react";
+import { Moon, Sun, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
 import { AnimatedCounter } from "@/components/animated-counter";
@@ -64,7 +64,7 @@ function HomePage() {
         {/* Logo */}
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            <Cat className="w-5 h-5 text-white" />
+            <Heart className="w-5 h-5 text-black stroke-2" fill="none" />
           </div>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-200">
             discord.cat

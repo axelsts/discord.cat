@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { config } from "dotenv";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { elasticsearchService } from "./services/elasticsearch";
 
 // Load environment variables
 config();
@@ -41,6 +42,14 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Test Elasticsearch connection on startup
+  try {
+    await elasticsearchService.testConnection();
+  } catch (error) {
+    console.error('Failed to connect to Elasticsearch:', error);
+    process.exit(1);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
