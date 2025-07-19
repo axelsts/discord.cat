@@ -65,31 +65,37 @@ function HomePage() {
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 text-blue-600 dark:text-blue-400">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-              {/* Cat body - side view */}
-              <ellipse cx="12" cy="16" rx="5" ry="3" fill="currentColor"/>
+              {/* Kitty body - side view */}
+              <ellipse cx="10" cy="17" rx="4" ry="2.5" fill="currentColor"/>
               
-              {/* Cat head - side view */}
-              <circle cx="8" cy="10" r="4" fill="currentColor"/>
+              {/* Kitty head - side view */}
+              <circle cx="7" cy="12" r="3.5" fill="currentColor"/>
               
-              {/* Ear */}
-              <path d="M6 7L8 6L9 9Z" fill="currentColor"/>
+              {/* Ears - pointed and alert */}
+              <path d="M5 9.5L6.5 8L7.5 10.5Z" fill="currentColor"/>
+              <path d="M7.5 9L9 8L9.5 10Z" fill="currentColor"/>
               
-              {/* Eye */}
-              <circle cx="7" cy="9" r="1" fill="white"/>
-              <circle cx="7" cy="9" r="0.5" fill="currentColor"/>
+              {/* Eye - cute and alert */}
+              <circle cx="6" cy="11.5" r="0.8" fill="white"/>
+              <circle cx="6" cy="11.5" r="0.4" fill="black"/>
+              <circle cx="6.2" cy="11.3" r="0.1" fill="white"/>
               
-              {/* Nose */}
-              <circle cx="4.5" cy="10.5" r="0.3" fill="#FF69B4"/>
+              {/* Nose - pink triangle */}
+              <path d="M3.5 12.5L4 12L4.5 12.5L4 13Z" fill="#FF69B4"/>
               
-              {/* Whiskers */}
-              <path d="M1 9L4 9.5M1 10L4 10M1 11L4 10.5" stroke="white" strokeWidth="0.5" strokeLinecap="round"/>
+              {/* Whiskers - delicate lines */}
+              <path d="M1 11L3.5 11.5M1 12L3.5 12M1 13L3.5 12.5" stroke="currentColor" strokeWidth="0.3" strokeLinecap="round"/>
               
-              {/* Tail - curved upward */}
-              <path d="M17 16C19 14 20 12 19 8C20 10 19 13 17 15" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+              {/* Tail - high in the air, curved gracefully */}
+              <path d="M14 17C16 15 17 12 18 8C19 6 20 4 21 3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
               
-              {/* Legs */}
-              <rect x="9" y="18" width="1" height="2" fill="currentColor"/>
-              <rect x="13" y="18" width="1" height="2" fill="currentColor"/>
+              {/* Legs - small and cute */}
+              <rect x="8" y="19" width="0.8" height="1.5" rx="0.4" fill="currentColor"/>
+              <rect x="11" y="19" width="0.8" height="1.5" rx="0.4" fill="currentColor"/>
+              
+              {/* Paws */}
+              <circle cx="8.4" cy="20.8" r="0.3" fill="currentColor"/>
+              <circle cx="11.4" cy="20.8" r="0.3" fill="currentColor"/>
             </svg>
           </div>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-200">
