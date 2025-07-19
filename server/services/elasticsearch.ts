@@ -3,7 +3,7 @@ import { DiscordMessage, Statistics, SearchFilters, SearchResults } from '@share
 
 class ElasticsearchService {
   private client: Client;
-  private indices = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'chunk5'];
+  private indices = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'chunk5', 'chunk6'];
 
   constructor() {
     const cloudId = process.env.ELASTICSEARCH_CLOUD_ID;
