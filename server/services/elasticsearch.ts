@@ -43,41 +43,73 @@ class ElasticsearchService {
     const response = await this.client.count({
       index: this.indices,
     });
-    return response.count;
+    
+    // Handle both old and new response formats
+    const count = response.count || response.body?.count;
+    if (typeof count !== 'number') {
+      console.error('Unexpected count response format:', JSON.stringify(response, null, 2));
+      throw new Error('Invalid count response format');
+    }
+    
+    return count;
   }
 
   private async getUniqueUsers(): Promise<number> {
-    const response = await this.client.search({
-      index: this.indices,
-      size: 0,
-      body: {
+    try {
+      const response = await this.client.search({
+        index: this.indices,
+        size: 0,
         aggs: {
           unique_users: {
             cardinality: {
-              field: 'author_id.keyword',
+              field: 'author_id',
             },
           },
         },
-      },
-    });
-    return response.body.aggregations.unique_users.value;
+      });
+      
+      // Handle both old and new response formats
+      const aggregations = response.aggregations || response.body?.aggregations;
+      
+      if (!aggregations || !aggregations.unique_users) {
+        console.error('No aggregations found in response');
+        return 0; // Return 0 instead of throwing to keep the app working
+      }
+      
+      return aggregations.unique_users.value || 0;
+    } catch (error) {
+      console.error('Error in getUniqueUsers:', error);
+      return 0; // Return 0 instead of throwing to keep the app working
+    }
   }
 
   private async getUniqueGuilds(): Promise<number> {
-    const response = await this.client.search({
-      index: this.indices,
-      size: 0,
-      body: {
+    try {
+      const response = await this.client.search({
+        index: this.indices,
+        size: 0,
         aggs: {
           unique_guilds: {
             cardinality: {
-              field: 'guild_id.keyword',
+              field: 'guild_id',
             },
           },
         },
-      },
-    });
-    return response.body.aggregations.unique_guilds.value;
+      });
+      
+      // Handle both old and new response formats
+      const aggregations = response.aggregations || response.body?.aggregations;
+      
+      if (!aggregations || !aggregations.unique_guilds) {
+        console.error('No aggregations found in response');
+        return 0; // Return 0 instead of throwing to keep the app working
+      }
+      
+      return aggregations.unique_guilds.value || 0;
+    } catch (error) {
+      console.error('Error in getUniqueGuilds:', error);
+      return 0; // Return 0 instead of throwing to keep the app working
+    }
   }
 
   async searchMessages(filters: SearchFilters): Promise<SearchResults> {
@@ -105,19 +137,19 @@ class ElasticsearchService {
       // Add exact match filters
       if (filters.author_id) {
         query.bool.must.push({
-          term: { 'author_id.keyword': filters.author_id },
+          term: { 'author_id': filters.author_id },
         });
       }
 
       if (filters.channel_id) {
         query.bool.must.push({
-          term: { 'channel_id.keyword': filters.channel_id },
+          term: { 'channel_id': filters.channel_id },
         });
       }
 
       if (filters.guild_id) {
         query.bool.must.push({
-          term: { 'guild_id.keyword': filters.guild_id },
+          term: { 'guild_id': filters.guild_id },
         });
       }
 
@@ -128,22 +160,27 @@ class ElasticsearchService {
 
       const response = await this.client.search({
         index: this.indices,
-        body: {
-          query,
-          sort: [
-            {
-              timestamp: {
-                order: filters.sort,
-              },
+        query,
+        sort: [
+          {
+            timestamp: {
+              order: filters.sort,
             },
-          ],
-          from,
-          size: pageSize,
-        },
+          },
+        ],
+        from,
+        size: pageSize,
       });
 
-      const messages: DiscordMessage[] = response.body.hits.hits.map((hit: any) => hit._source);
-      const total = response.body.hits.total.value;
+      // Handle both old and new response formats
+      const hits = response.hits || response.body?.hits;
+      if (!hits) {
+        console.error('Unexpected search response format:', JSON.stringify(response, null, 2));
+        throw new Error('Invalid search response format');
+      }
+      
+      const messages: DiscordMessage[] = hits.hits.map((hit: any) => hit._source);
+      const total = typeof hits.total === 'number' ? hits.total : hits.total?.value || 0;
       const hasMore = from + pageSize < total;
 
       return {
