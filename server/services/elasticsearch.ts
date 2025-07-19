@@ -43,14 +43,14 @@ class ElasticsearchService {
     const response = await this.client.count({
       index: this.indices,
     });
-    
+
     // Handle both old and new response formats
-    const count = response.count || response.body?.count;
+    const count = response.count ?? response.body?.count;
     if (typeof count !== 'number') {
       console.error('Unexpected count response format:', JSON.stringify(response, null, 2));
       throw new Error('Invalid count response format');
     }
-    
+
     return count;
   }
 
@@ -67,19 +67,19 @@ class ElasticsearchService {
           },
         },
       });
-      
+
       // Handle both old and new response formats
-      const aggregations = response.aggregations || response.body?.aggregations;
-      
+      const aggregations = response.aggregations ?? response.body?.aggregations;
+
       if (!aggregations || !aggregations.unique_users) {
         console.error('No aggregations found in response');
-        return 0; // Return 0 instead of throwing to keep the app working
+        return 0;
       }
-      
+
       return aggregations.unique_users.value || 0;
     } catch (error) {
       console.error('Error in getUniqueUsers:', error);
-      return 0; // Return 0 instead of throwing to keep the app working
+      return 0;
     }
   }
 
@@ -96,26 +96,26 @@ class ElasticsearchService {
           },
         },
       });
-      
+
       // Handle both old and new response formats
-      const aggregations = response.aggregations || response.body?.aggregations;
-      
+      const aggregations = response.aggregations ?? response.body?.aggregations;
+
       if (!aggregations || !aggregations.unique_guilds) {
         console.error('No aggregations found in response');
-        return 0; // Return 0 instead of throwing to keep the app working
+        return 0;
       }
-      
+
       return aggregations.unique_guilds.value || 0;
     } catch (error) {
       console.error('Error in getUniqueGuilds:', error);
-      return 0; // Return 0 instead of throwing to keep the app working
+      return 0;
     }
   }
 
   async searchMessages(filters: SearchFilters): Promise<SearchResults> {
     try {
       console.log("Elasticsearch searchMessages called with filters:", filters);
-      
+
       const pageSize = 50;
       const from = (filters.page - 1) * pageSize;
 
@@ -130,7 +130,6 @@ class ElasticsearchService {
         query.bool.must.push({
           bool: {
             should: [
-              // Exact phrase match (highest priority)
               {
                 match_phrase: {
                   content: {
@@ -139,7 +138,6 @@ class ElasticsearchService {
                   },
                 },
               },
-              // Phrase prefix match
               {
                 match_phrase_prefix: {
                   content: {
@@ -148,7 +146,6 @@ class ElasticsearchService {
                   },
                 },
               },
-              // Fuzzy match for typos
               {
                 match: {
                   content: {
@@ -164,7 +161,6 @@ class ElasticsearchService {
         });
       }
 
-      // Add exact match filters
       if (filters.author_id) {
         query.bool.must.push({
           term: { 'author_id': filters.author_id },
@@ -183,7 +179,6 @@ class ElasticsearchService {
         });
       }
 
-      // If no filters provided, match all
       if (query.bool.must.length === 0) {
         query.bool.must.push({ match_all: {} });
       }
@@ -205,20 +200,20 @@ class ElasticsearchService {
       console.log("Elasticsearch search params:", JSON.stringify(searchParams, null, 2));
 
       const response = await this.client.search(searchParams);
-      
+
       console.log("Elasticsearch response received:", {
         took: response.took,
-        hits_total: response.hits?.total,
-        hits_count: response.hits?.hits?.length
+        hits_total: (response.hits?.total ?? response.body?.hits?.total),
+        hits_count: (response.hits?.hits?.length ?? response.body?.hits?.hits?.length)
       });
 
       // Handle both old and new response formats
-      const hits = response.hits || response.body?.hits;
+      const hits = response.hits ?? response.body?.hits;
       if (!hits) {
         console.error('Unexpected search response format:', JSON.stringify(response, null, 2));
         throw new Error('Invalid search response format');
       }
-      
+
       const messages: DiscordMessage[] = hits.hits.map((hit: any) => hit._source);
       const total = typeof hits.total === 'number' ? hits.total : hits.total?.value || 0;
       const hasMore = from + pageSize < total;
@@ -229,14 +224,14 @@ class ElasticsearchService {
         page: filters.page,
         has_more: hasMore,
       };
-      
+
       console.log("Final search result:", {
         messageCount: result.messages.length,
         total: result.total,
         page: result.page,
         has_more: result.has_more
       });
-      
+
       return result;
     } catch (error: any) {
       console.error('Error searching messages:', {
