@@ -6,19 +6,25 @@ class ElasticsearchService {
   private indices = ['chunk1', 'chunk2', 'chunk3', 'chunk4', 'chunk5', 'chunk6'];
 
   constructor() {
-    if (!process.env.ELASTICSEARCH_CLOUD_ID) {
-      throw new Error('ELASTICSEARCH_CLOUD_ID environment variable is required');
-    }
-    if (!process.env.ELASTICSEARCH_USERNAME) {
-      throw new Error('ELASTICSEARCH_USERNAME environment variable is required');
-    }
-    if (!process.env.ELASTICSEARCH_PASSWORD) {
-      throw new Error('ELASTICSEARCH_PASSWORD environment variable is required');
-    }
-
     const cloudId = process.env.ELASTICSEARCH_CLOUD_ID;
     const username = process.env.ELASTICSEARCH_USERNAME;
     const password = process.env.ELASTICSEARCH_PASSWORD;
+
+    // Check if we have placeholder values or missing values
+    if (!cloudId || cloudId === 'placeholder_cloud_id' || 
+        !username || username === 'placeholder_username' || 
+        !password || password === 'placeholder_password') {
+      console.warn('⚠️  Elasticsearch credentials not configured properly.');
+      console.warn('   Please update your .env file with actual Elasticsearch credentials:');
+      console.warn('   - ELASTICSEARCH_CLOUD_ID');
+      console.warn('   - ELASTICSEARCH_USERNAME');
+      console.warn('   - ELASTICSEARCH_PASSWORD');
+      console.warn('   The application will continue but search functionality will be disabled.');
+      
+      // Create a mock client that will fail gracefully
+      this.client = null as any;
+      return;
+    }
 
     this.client = new Client({
       cloud: { id: cloudId },
@@ -26,7 +32,23 @@ class ElasticsearchService {
     });
   }
 
+  private checkConnection(): boolean {
+    if (!this.client) {
+      console.warn('Elasticsearch not configured - operation skipped');
+      return false;
+    }
+    return true;
+  }
+
   async getStatistics(): Promise<Statistics> {
+    if (!this.checkConnection()) {
+      return {
+        total_messages: 0,
+        unique_users: 0,
+        unique_guilds: 0,
+      };
+    }
+
     try {
       const [totalMessages, uniqueUsers, uniqueGuilds] = await Promise.all([
         this.getTotalMessages(),
@@ -46,6 +68,8 @@ class ElasticsearchService {
   }
 
   private async getTotalMessages(): Promise<number> {
+    if (!this.checkConnection()) return 0;
+
     const response = await this.client.count({
       index: this.indices,
     });
@@ -61,6 +85,8 @@ class ElasticsearchService {
   }
 
   private async getUniqueUsers(): Promise<number> {
+    if (!this.checkConnection()) return 0;
+
     try {
       const response = await this.client.search({
         index: this.indices,
@@ -90,6 +116,8 @@ class ElasticsearchService {
   }
 
   private async getUniqueGuilds(): Promise<number> {
+    if (!this.checkConnection()) return 0;
+
     try {
       const response = await this.client.search({
         index: this.indices,
@@ -119,6 +147,15 @@ class ElasticsearchService {
   }
 
   async searchMessages(filters: SearchFilters): Promise<SearchResults> {
+    if (!this.checkConnection()) {
+      return {
+        messages: [],
+        total: 0,
+        page: filters.page,
+        has_more: false,
+      };
+    }
+
     try {
       console.log("Elasticsearch searchMessages called with filters:", filters);
 
