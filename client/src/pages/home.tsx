@@ -63,51 +63,33 @@ function HomePage() {
       <header className="flex items-center justify-between px-8 py-6">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 text-blue-600 dark:text-blue-400">
-            <svg viewBox="0 0 32 32" fill="currentColor" className="w-full h-full">
-              {/* Cat body */}
-              <ellipse cx="16" cy="20" rx="7" ry="5" fill="currentColor"/>
+          <div className="w-8 h-8 text-blue-600 dark:text-blue-400">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+              {/* Cat body - side view */}
+              <ellipse cx="12" cy="16" rx="5" ry="3" fill="currentColor"/>
               
-              {/* Cat head */}
-              <circle cx="16" cy="12" r="6" fill="currentColor"/>
+              {/* Cat head - side view */}
+              <circle cx="8" cy="10" r="4" fill="currentColor"/>
               
-              {/* Left ear */}
-              <path d="M10 8L12 12L8 11Z" fill="currentColor"/>
-              {/* Right ear */}
-              <path d="M22 8L24 11L20 12Z" fill="currentColor"/>
+              {/* Ear */}
+              <path d="M6 7L8 6L9 9Z" fill="currentColor"/>
               
-              {/* Inner ears */}
-              <path d="M10.5 9L11.5 11.5L9 10.5Z" fill="white" opacity="0.8"/>
-              <path d="M21.5 9L23 10.5L20.5 11.5Z" fill="white" opacity="0.8"/>
-              
-              {/* Eyes */}
-              <ellipse cx="13" cy="11" rx="1.5" ry="2" fill="white"/>
-              <ellipse cx="19" cy="11" rx="1.5" ry="2" fill="white"/>
-              <ellipse cx="13" cy="11.2" rx="0.8" ry="1.2" fill="currentColor"/>
-              <ellipse cx="19" cy="11.2" rx="0.8" ry="1.2" fill="currentColor"/>
-              <ellipse cx="13" cy="10.5" rx="0.3" ry="0.5" fill="white"/>
-              <ellipse cx="19" cy="10.5" rx="0.3" ry="0.5" fill="white"/>
+              {/* Eye */}
+              <circle cx="7" cy="9" r="1" fill="white"/>
+              <circle cx="7" cy="9" r="0.5" fill="currentColor"/>
               
               {/* Nose */}
-              <path d="M15 13.5L16 12.5L17 13.5L16 14Z" fill="#FF69B4"/>
-              
-              {/* Mouth */}
-              <path d="M14 15C14.5 16 15.2 16.5 16 16.5C16.8 16.5 17.5 16 18 15" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round"/>
-              <path d="M16 14L16 15.5" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+              <circle cx="4.5" cy="10.5" r="0.3" fill="#FF69B4"/>
               
               {/* Whiskers */}
-              <path d="M8 11L12 10.5M8 12L12 11.5M8 13L12 12.5" stroke="white" strokeWidth="1" strokeLinecap="round"/>
-              <path d="M24 11L20 10.5M24 12L20 11.5M24 13L20 12.5" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+              <path d="M1 9L4 9.5M1 10L4 10M1 11L4 10.5" stroke="white" strokeWidth="0.5" strokeLinecap="round"/>
               
-              {/* Tail - curved and fluffy */}
-              <path d="M23 18C25 16 27 14 28 10C29 12 27 16 25 18C24 19 23 19 23 18Z" fill="currentColor"/>
-              <path d="M24 17C26 15 27.5 13 28.5 10.5C29 12 28 15 26 17C25.2 17.8 24.2 17.8 24 17Z" fill="white" opacity="0.3"/>
+              {/* Tail - curved upward */}
+              <path d="M17 16C19 14 20 12 19 8C20 10 19 13 17 15" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
               
-              {/* Paws */}
-              <ellipse cx="12" cy="24" rx="1.5" ry="1" fill="currentColor"/>
-              <ellipse cx="20" cy="24" rx="1.5" ry="1" fill="currentColor"/>
-              <ellipse cx="12" cy="24" rx="1" ry="0.5" fill="white" opacity="0.6"/>
-              <ellipse cx="20" cy="24" rx="1" ry="0.5" fill="white" opacity="0.6"/>
+              {/* Legs */}
+              <rect x="9" y="18" width="1" height="2" fill="currentColor"/>
+              <rect x="13" y="18" width="1" height="2" fill="currentColor"/>
             </svg>
           </div>
           <span className="text-xl font-bold text-gray-800 dark:text-gray-200">
