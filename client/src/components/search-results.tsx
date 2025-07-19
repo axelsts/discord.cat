@@ -15,8 +15,36 @@ interface SearchResultsProps {
 
 export function SearchResults({ filters, onPageChange }: SearchResultsProps) {
   const { data: results, isLoading, error } = useQuery<SearchResultsType>({
-    queryKey: ["/api/search", filters],
+    queryKey: ["/api/search", JSON.stringify(filters)],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (filters.content) params.append('content', filters.content);
+      if (filters.author_id) params.append('author_id', filters.author_id);
+      if (filters.channel_id) params.append('channel_id', filters.channel_id);
+      if (filters.guild_id) params.append('guild_id', filters.guild_id);
+      if (filters.sort) params.append('sort', filters.sort);
+      params.append('page', filters.page.toString());
+      
+      console.log("Making search request with params:", params.toString());
+      
+      const response = await fetch(`/api/search?${params.toString()}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || errorData.error || 'Search failed');
+      }
+      return response.json();
+    },
     enabled: Object.values(filters).some(value => value && value !== ""),
+    onError: (error) => {
+      console.error("Search query error:", error);
+    },
+    onSuccess: (data) => {
+      console.log("Search query success:", {
+        messageCount: data?.messages?.length,
+        total: data?.total,
+        page: data?.page
+      });
+    }
   });
 
   // Cache for user data
@@ -193,10 +221,10 @@ export function SearchResults({ filters, onPageChange }: SearchResultsProps) {
           </div>
           
           <div className="space-y-4">
-            {results.messages.map((message) => {
+            {results.messages.map((message, index) => {
               const user = users?.[message.author_id];
               return (
-                <div key={message.message_id} className="flex items-start space-x-4 p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                <div key={`${message.message_id}-${index}`} className="flex items-start space-x-4 p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user?.avatar || undefined} alt={user?.username} />
                     <AvatarFallback>

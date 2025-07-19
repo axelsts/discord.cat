@@ -19,6 +19,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Search messages endpoint
   app.get("/api/search", async (req, res) => {
     try {
+      console.log("Search request received:", {
+        query: req.query,
+        url: req.url,
+        method: req.method
+      });
+
       const filters = searchFiltersSchema.parse({
         content: req.query.content || undefined,
         author_id: req.query.author_id || undefined,
@@ -28,11 +34,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         page: req.query.page ? parseInt(req.query.page as string) : 1,
       });
 
+      console.log("Parsed filters:", filters);
+
       const results = await elasticsearchService.searchMessages(filters);
+      console.log("Search results:", {
+        messageCount: results.messages.length,
+        total: results.total,
+        page: results.page,
+        has_more: results.has_more
+      });
+
       res.json(results);
-    } catch (error) {
-      console.error("Error searching messages:", error);
-      res.status(500).json({ error: "Failed to search messages" });
+    } catch (error: any) {
+      console.error("Error searching messages:", {
+        error: error?.message || error,
+        stack: error?.stack,
+        query: req.query
+      });
+      res.status(500).json({ error: "Failed to search messages", details: error?.message || String(error) });
     }
   });
 
@@ -50,9 +69,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(user);
-    } catch (error) {
-      console.error(`Error fetching user ${req.params.id}:`, error);
-      res.status(500).json({ error: "Failed to fetch user" });
+    } catch (error: any) {
+      console.error(`Error fetching user ${req.params.id}:`, error?.message || error);
+      res.status(500).json({ error: "Failed to fetch user", details: error?.message || String(error) });
     }
   });
 

@@ -114,6 +114,8 @@ class ElasticsearchService {
 
   async searchMessages(filters: SearchFilters): Promise<SearchResults> {
     try {
+      console.log("Elasticsearch searchMessages called with filters:", filters);
+      
       const pageSize = 50;
       const from = (filters.page - 1) * pageSize;
 
@@ -186,7 +188,7 @@ class ElasticsearchService {
         query.bool.must.push({ match_all: {} });
       }
 
-      const response = await this.client.search({
+      const searchParams = {
         index: this.indices,
         query,
         sort: [
@@ -198,6 +200,16 @@ class ElasticsearchService {
         ],
         from,
         size: pageSize,
+      };
+
+      console.log("Elasticsearch search params:", JSON.stringify(searchParams, null, 2));
+
+      const response = await this.client.search(searchParams);
+      
+      console.log("Elasticsearch response received:", {
+        took: response.took,
+        hits_total: response.hits?.total,
+        hits_count: response.hits?.hits?.length
       });
 
       // Handle both old and new response formats
@@ -211,15 +223,28 @@ class ElasticsearchService {
       const total = typeof hits.total === 'number' ? hits.total : hits.total?.value || 0;
       const hasMore = from + pageSize < total;
 
-      return {
+      const result = {
         messages,
         total,
         page: filters.page,
         has_more: hasMore,
       };
-    } catch (error) {
-      console.error('Error searching messages:', error);
-      throw new Error('Failed to search messages');
+      
+      console.log("Final search result:", {
+        messageCount: result.messages.length,
+        total: result.total,
+        page: result.page,
+        has_more: result.has_more
+      });
+      
+      return result;
+    } catch (error: any) {
+      console.error('Error searching messages:', {
+        error: error?.message || error,
+        stack: error?.stack,
+        filters
+      });
+      throw new Error(`Failed to search messages: ${error?.message || error}`);
     }
   }
 }
