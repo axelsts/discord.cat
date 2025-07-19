@@ -12,6 +12,9 @@ run = ["npm", "run", "start"]
 
 [env]
 PORT = "5000"
+ELASTICSEARCH_CLOUD_ID="your_cloud_id_here"
+ELASTICSEARCH_USERNAME="your_username_here"
+ELASTICSEARCH_PASSWORD="your_password_here"
 
 [workflows]
 runButton = "Project"
